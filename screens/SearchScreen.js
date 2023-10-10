@@ -1,8 +1,10 @@
+import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
-import React from "react";
 import { View, TextInput, Button } from "react-native";
+import PlaceResult from "../components/PlaceResult";
 
 const SearchScreen = () => {
+  const [place, setPlace] = useState("");
   return (
     <View style={{ marginTop: 40, marginHorizontal: 10 }}>
       <View
@@ -17,8 +19,13 @@ const SearchScreen = () => {
         }}
       >
         <Feather name="search" size={22} color="black" />
-        <TextInput placeholder="Enter your destination" />
+        <TextInput
+          placeholder="Enter your destination"
+          value={place}
+          onChangeText={(text) => setPlace(text)}
+        />
       </View>
+      <PlaceResult place={place} setPlace={setPlace} />
     </View>
   );
 };

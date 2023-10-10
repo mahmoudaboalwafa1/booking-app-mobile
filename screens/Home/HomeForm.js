@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, Pressable, TextInput, Button } from "react-native";
+import { View, Text, Pressable, TextInput, Button, Alert } from "react-native";
 import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import HomeStyle from "../../style/HomeStyle";
 import DatePicker from "@react-native-community/datetimepicker";
 import { BottomModal, ModalContent, ModalTitle } from "react-native-modals";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const HomeForm = () => {
   const [valueDate, setValueDate] = useState(new Date());
@@ -14,6 +14,7 @@ const HomeForm = () => {
   const [adults, setAdults] = useState(2);
   const [Children, setChildren] = useState(0);
   const navigator = useNavigation();
+  const route = useRoute();
 
   const handleSearch = () => {
     navigator.navigate("Search");
@@ -32,12 +33,43 @@ const HomeForm = () => {
     setShowModule(!showModule);
   };
 
+  const handleBtnSearch = () => {
+    route?.params?.place
+      ? navigator.navigate("Place", {
+          placeName: route.params.place,
+          index: route.params.index,
+          adults: adults,
+          children: Children,
+          rooms: rooms,
+        })
+      : Alert.alert(
+          "Alert Title",
+          "My Alert Msg",
+          [
+            {
+              text: "Cancel",
+            },
+          ],
+          {
+            cancelable: true,
+            onDismiss: () =>
+              Alert.alert(
+                "This alert was dismissed by tapping outside of the alert dialog."
+              ),
+          }
+        );
+  };
+
   return (
     <View style={HomeStyle.formHome}>
       <Pressable style={HomeStyle.inputDestination} onPress={handleSearch}>
         <TextInput
           style={{ width: "90%" }}
-          placeholder="Enter your destination"
+          placeholder={
+            route?.params?.place
+              ? route?.params?.place
+              : "Enter your destination"
+          }
           editable={false}
         />
         <Feather
@@ -81,7 +113,7 @@ const HomeForm = () => {
         />
       </Pressable>
       <Pressable>
-        <Button color="#003580" title="Search" />
+        <Button onPress={handleBtnSearch} color="#003580" title="Search" />
       </Pressable>
       <BottomModal
         visible={showModule}
@@ -89,7 +121,8 @@ const HomeForm = () => {
         modalTitle={
           <ModalTitle
             title="Select Rooms And Guests"
-            textStyle={{ fontSize: 15 }}
+            textStyle={{ fontSize: 15, color: "white" }}
+            style={{ backgroundColor: "#003580" }}
             align="right"
           />
         }
