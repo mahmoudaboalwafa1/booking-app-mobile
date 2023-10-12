@@ -2,8 +2,11 @@ import React, { useLayoutEffect } from "react";
 import { View, Text, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { addBookData } from "../../reducer/actions";
 
 const ConfirmationScreen = () => {
+  const dispatch = useDispatch();
   const route = useRoute();
   const navigation = useNavigation();
   const { selectedRooms, adults, properties, children, rooms } = route.params;
@@ -16,6 +19,12 @@ const ConfirmationScreen = () => {
 
     return unsub;
   }, []);
+
+  const handleConfirmation = () => {
+    navigation.replace("main");
+    dispatch(addBookData(route.params));
+  };
+
   return (
     <View style={{ backgroundColor: "white", margin: 5, borderRadius: 5 }}>
       <View
@@ -101,7 +110,12 @@ const ConfirmationScreen = () => {
             marginVertical: 7,
           }}
         >
-          <Text style={{ color: "white", textAlign: "center" }}>Book Now</Text>
+          <Text
+            style={{ color: "white", textAlign: "center" }}
+            onPress={handleConfirmation}
+          >
+            Book Now
+          </Text>
         </Pressable>
       </View>
     </View>

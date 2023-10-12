@@ -95,8 +95,6 @@ const PlaceArea = () => {
 
   favData.length > 0 && dispatch(addFav(favData));
 
-  console.log(favData);
-
   return (
     <>
       <View

@@ -8,7 +8,6 @@ const SavedScreen = () => {
   const savedData = useSelector((state) => state?.favBooking);
   const { width, height } = Dimensions.get("window");
 
-  savedData.length > 0 && console.log(savedData);
 
   return (
     <FlatList
