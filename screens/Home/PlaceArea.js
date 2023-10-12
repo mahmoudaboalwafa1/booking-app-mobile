@@ -18,16 +18,21 @@ import {
   ModalFooter,
   ModalTitle,
 } from "react-native-modals";
+import { useDispatch, useSelector } from "react-redux";
+import { addFav } from "../../reducer/actions";
 
 const PlaceArea = () => {
   const route = useRoute();
   const { width, height } = Dimensions.get("window");
   const [sortFilter, setSortFilter] = useState(false);
   const [filter, setFilter] = useState("");
+  const [fav, setFav] = useState([false, false, false]);
   const [sortedData, setSortedData] = useState(
     data[route.params.index].properties
   );
+  const dispatch = useDispatch();
 
+  const [favData, setFavData] = useState([]);
   const navigation = useNavigation();
 
   const compareLow = (a, b) => {
@@ -75,8 +80,23 @@ const PlaceArea = () => {
       adults: route.params.adults ? route.params.adults : 0,
       rooms: route.params.rooms ? route.params.rooms : 0,
       children: route.params.children ? route.params.children : 0,
+      date: route.params.valueDate,
     });
   };
+
+  const favBooking = (index, item) => {
+    setFav(fav.map((lov, i) => (i === index ? !lov : lov)));
+    setFavData([...favData, item]);
+  };
+
+  const unFavBooking = (index) => {
+    setFav(fav.map((lov, i) => (i === index ? !lov : lov)));
+  };
+
+  favData.length > 0 && dispatch(addFav(favData));
+
+  console.log(favData);
+
   return (
     <>
       <View
@@ -143,7 +163,21 @@ const PlaceArea = () => {
                           ? item.name.substr(0, 20)
                           : item?.name}
                       </Text>
-                      <AntDesign name="hearto" size={24} color="red" />
+                      {!fav[index] ? (
+                        <AntDesign
+                          name="hearto"
+                          size={24}
+                          color="red"
+                          onPress={() => favBooking(index, item)}
+                        />
+                      ) : (
+                        <AntDesign
+                          name="heart"
+                          size={24}
+                          color="red"
+                          onPress={() => unFavBooking(index)}
+                        />
+                      )}
                     </View>
 
                     <View

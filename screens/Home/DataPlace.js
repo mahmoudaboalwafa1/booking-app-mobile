@@ -1,7 +1,6 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
-import { Pressable } from "react-native";
 import { View, Text, Image, Button } from "react-native";
 import { Dimensions } from "react-native";
 import { services } from "../../data";
@@ -12,7 +11,7 @@ const DataPlace = () => {
   const navigation = useNavigation();
   const { width, height } = Dimensions.get("window");
 
-  const { properties, rooms, children, adults } = route.params;
+  const { properties, rooms, children, adults, date } = route.params;
   const widthPhone = width - 330;
   const heightPhone = height - 750;
 
@@ -158,8 +157,10 @@ const DataPlace = () => {
               gap: 60,
             }}
           >
-            <Text style={{ color: "#0074ff" }}>2021/6/26</Text>
-            <Text style={{ color: "#0074ff" }}>2023/8/09</Text>
+            <Text style={{ color: "#0074ff" }}>{date.toDateString()}</Text>
+            <Text style={{ color: "#0074ff" }}>
+              {new Date().toDateString()}
+            </Text>
           </View>
           <View>
             <Text style={{ marginTop: 20, fontWeight: 500 }}>

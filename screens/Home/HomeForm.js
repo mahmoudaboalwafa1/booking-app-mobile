@@ -7,7 +7,7 @@ import { BottomModal, ModalContent, ModalTitle } from "react-native-modals";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const HomeForm = () => {
-  const [valueDate, setValueDate] = useState(new Date());
+  const [valueDate, setValueDate] = useState();
   const [statusDate, setStatusDate] = useState(false);
   const [showModule, setShowModule] = useState(false);
   const [rooms, setRooms] = useState(1);
@@ -34,30 +34,27 @@ const HomeForm = () => {
   };
 
   const handleBtnSearch = () => {
-    route?.params?.place
-      ? navigator.navigate("Place", {
-          placeName: route.params.place,
-          index: route.params.index,
-          adults: adults,
-          children: Children,
-          rooms: rooms,
-        })
-      : Alert.alert(
-          "Alert Title",
-          "My Alert Msg",
-          [
-            {
-              text: "Cancel",
-            },
-          ],
+    if (route?.params?.place && valueDate) {
+      navigator.navigate("Place", {
+        placeName: route.params.place,
+        index: route.params.index,
+        adults: adults,
+        children: Children,
+        rooms: rooms,
+        valueDate,
+      });
+    } else {
+      Alert.alert(
+        "It wasn't perfect",
+        "The location must be selected and the date determined",
+        [
           {
-            cancelable: true,
-            onDismiss: () =>
-              Alert.alert(
-                "This alert was dismissed by tapping outside of the alert dialog."
-              ),
-          }
-        );
+            text: "close",
+            style: "cancel",
+          },
+        ]
+      );
+    }
   };
 
   return (
@@ -79,15 +76,15 @@ const HomeForm = () => {
           color="black"
         />
       </Pressable>
-      <Pressable style={HomeStyle.inputDestination}>
-        <Pressable onPress={handleShowDate}>
-          <TextInput value={valueDate.toDateString()} editable={false} />
+      <Pressable style={HomeStyle.inputDestination} onPress={handleShowDate}>
+        <Pressable>
+          <TextInput value={valueDate?.toDateString()} editable={false} />
         </Pressable>
         {statusDate && (
           <DatePicker
             mode="date"
             placeholderText="Enter Date"
-            value={valueDate}
+            value={valueDate ? valueDate : new Date()}
             onChange={handleChangeDate}
           />
         )}
